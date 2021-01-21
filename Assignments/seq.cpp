@@ -1,11 +1,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
-#include <chrono>
 #include <ctime>
 #include "get_time.h"
 
-using namespace std::chrono;
 using namespace std;
 
 int main(){
