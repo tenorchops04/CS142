@@ -1,13 +1,9 @@
-#include <iostream>
-#include <stdio.h>
-#include <math.h>
-#include <chrono>
 #include <ctime>
 #include <cilk/cilk.h>
 #include <cilk/cilk_api.h>
 #include "get_time.h"
+#include <math.h>
 
-//using namespace std::chrono;
 using namespace std;
 
 long double reduce(int* A, int n){
@@ -25,16 +21,19 @@ long double reduce(int* A, int n){
 }
 
 int main(){
-	int n = 100000000;
+	long segs = pow(10,8);
+	int n = 10000;
 	long double sum = 0;
-	int* A = new int[n];
-
-	cilk_for(int i = 0; i < n; i++){
-		A[i] = i;
-	}
+	int* A = new int[10000];
 
 	timer t;
-	sum = reduce(A, n);	
+	for(int l = 0; l < 10000; l++){
+		cilk_for(int i=(long)l*segs/10000; i<(long)(l+1)*segs/10000; i++){
+			A[i - (long)l*segs/10000] = i;
+		}
+		sum += reduce(A, n);
+	}
+
 	t.stop();
 
 	cout << "Duration: " << t.get_total() << endl;
